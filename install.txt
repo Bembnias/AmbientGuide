@@ -1,0 +1,13 @@
+I)
+    Nvidia:
+    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+    CPU:
+    pip3 install torch torchvision torchaudio
+
+II)
+    pip3 install torch torchvision torchaudio
+
+III)
+    pip install pyttsx3
+
