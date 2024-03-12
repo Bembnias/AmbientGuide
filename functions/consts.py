@@ -1,7 +1,7 @@
 # WARTOŚCI PODANE W centrymetrach
 KNOWN_WIDTHS = {
     'cell phone': 7.0,
-    'person': 55.0,
+    'person': 46.0,
     'tv': 110.0,
 }
 

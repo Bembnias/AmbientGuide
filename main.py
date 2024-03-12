@@ -5,6 +5,8 @@ from ultralytics import YOLO
 # Inicjalizacja modelu YOLO
 model = YOLO("yolov8x.pt")
 cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 # Pomocnicze funkcje
 def object_data(model, image_path, object_name):
@@ -44,7 +46,6 @@ for object_name, image_path in REFERENCE_IMAGES.items():
         focal_length = focal_length_finder(KNOWN_DISTANCES[object_name], KNOWN_WIDTHS[object_name], width_in_pixels)
         focal_lengths[object_name] = focal_length
 
-
 # W głównej pętli
 while True:
     ret, frame = cap.read()
@@ -60,13 +61,15 @@ while True:
             object_name = model.names[class_id]
 
             if object_name in KNOWN_WIDTHS:
-                object_width_in_frame = x2 - x1
+                object_width_in_frame = abs(x2) - abs(x1)
                 # Sprawdzamy, czy mamy obliczoną ogniskową dla tego obiektu
                 if object_name in focal_lengths:
                     distance = distance_finder(focal_lengths[object_name], KNOWN_WIDTHS[object_name], object_width_in_frame)
+                    rounded_distance = round(distance.item(), 2)
+
                     # Rysowanie i wyświetlanie odległości
                     cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
-                    cv2.putText(frame, f"{object_name}: {distance} cm", (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+                    cv2.putText(frame, f"{object_name}: {rounded_distance} cm", (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
     cv2.imshow("frame", frame)
     if cv2.waitKey(1) == ord('q'):
