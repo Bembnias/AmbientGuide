@@ -3,7 +3,7 @@ from functions.consts import KNOWN_DISTANCES, KNOWN_WIDTHS, REFERENCE_IMAGES, fo
 from ultralytics import YOLO
 
 # Inicjalizacja modelu YOLO
-model = YOLO("yolov8x.pt")
+model = YOLO("yolov8s.pt")
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
