@@ -1,5 +1,7 @@
 # AmbientGuide 
 
+<img src="https://github.com/Bembnias/AmbientGuide/assets/65775402/bd91ca5e-a6a5-4baf-bdec-ffdf609db314" alt="Logo" style="width: 250px; height: auto;">
+
 ![Version - 1.0.0](https://img.shields.io/badge/Version-1.0.0-57BDF5)
 
 ## 📝 Description
