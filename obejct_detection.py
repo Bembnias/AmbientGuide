@@ -6,7 +6,7 @@ from polish_object import polish_object
 import time
 def object_detection(cap, model, f):
     ret, frame = cap.read()
-    results = model.predict(source=frame, conf=0.6, show=False)
+    results = model.predict(source=frame, conf=0.4, show=False)
     distance = []
     row = []
     for result in results:
@@ -26,9 +26,9 @@ def object_detection(cap, model, f):
             row = []
     priority = object_prioritization(distance)
     for object in priority:
-        if(object[1] >=1):
+        if(object[1] >=0.25):
             object_name = model.names[object[0]]
             polish_name = polish_object(object_name)
             side = detect_side(object[2], object[3], frame)
             send_packet(polish_name, side)
-            time.sleep(3)
+            time.sleep(0.5)
