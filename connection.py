@@ -1,42 +1,95 @@
 import socket
-import sys
+import time
+
+global ip_address
+ip_address = None  # Initialize ip_address variable
+
+
+def get_IP():
+    return ip_address
+
+
+def set_IP(ip):
+    global ip_address
+    ip_address = ip
+
 
 def getIP():
-    # Tworzenie gniazda UDP
+    global ip_address
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    # Powiązanie gniazda z adresem i portem
-    host = '0.0.0.0'  # Nasłuchujemy na wszystkich adresach IP
+    host = '0.0.0.0'
     port = 2137
     udp_socket.bind((host, port))
 
-    print(f"Nasłuchiwanie na porcie {port}...")
+    print(f"Listening on port {port}...")
 
     try:
         while True:
-            # Odbieranie danych
             data, address = udp_socket.recvfrom(1024)
 
-            # Dekodowanie odebranych danych
             message = data.decode('utf-8')
 
-            # Jeśli otrzymana wiadomość to "2137", wypisz adres IP nadawcy
             if message.strip() == "2137":
-                print(f"Otrzymano wiadomość '2137' od {address[0]}")
+                print(f"Received '2137' message from {address[0]}")
 
-                # Wysyłanie odpowiedzi na znany adres IP
-                response_message = "Odpowiedź na wiadomość '2137'"
+                response_message = "Response to '2137' message"
                 udp_socket.sendto(response_message.encode('utf-8'), address)
-                print("Wysłano odpowiedź.")
+                print("Sent response.")
+                set_IP(address[0])
+                udp_socket.close()
+                check_device_availability()
+                return
 
-                return address[0]
     except KeyboardInterrupt:
-        print("Przerwano nasłuchiwanie.")
-        sys.exit(0)
-        print("Przerwano nasłuchiwanie.")
-        return '0.0.0.0'
-    finally:
-        # Zamykanie gniazda
+        print("Interrupted.")
         udp_socket.close()
-        return '0.0.0.0'
 
+
+def check_device_availability():
+    global ip_address
+    global start_time
+    if ip_address is not None:
+        udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        host = '0.0.0.0'
+        port = 2137
+        udp_socket.bind((host, port))
+
+        print(f"Listening on port {port}...")
+
+        start_time = time.time()
+
+        try:
+            while True:
+                data, address = udp_socket.recvfrom(1024)
+
+                message = data.decode('utf-8')
+
+                if message.strip() == "AmbientGuide_Check_Connect":
+                    print(f"Received {message.strip()} message from {address[0]}")
+
+                    response_message = "AmbientGuide_Check_Connect"
+                    udp_socket.sendto(response_message.encode('utf-8'), address)
+                    print("Sent response.")
+                    set_IP(address[0])
+                    start_time = time.time()
+                    udp_socket.close()
+                    check_device_availability()
+                    return
+
+                # Zresetuj czas, jeśli otrzymasz pakiet
+
+
+                # Sprawdź, czy minęło więcej niż 6 sekund od ostatniego pakietu
+                if time.time() - start_time > 3:
+                    print("Connection timeout.")
+                    ip_address = None
+                    udp_socket.close()
+                    getIP()
+
+        except KeyboardInterrupt:
+            print("Interrupted.")
+            udp_socket.close()
+    else:
+        getIP()
