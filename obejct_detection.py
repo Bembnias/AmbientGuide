@@ -1,8 +1,9 @@
 from estimate_distance import estimate_distances
 from object_prioritization import object_prioritization
-from udp_transfer import send_packet
+from udp_transfer import send_packet, send_packet_with_color
 from detect_side import detect_side
 from polish_object import polish_object
+from detect_color import determine_traffic_light_color
 import time
 import connection
 
@@ -35,6 +36,13 @@ def object_detection(cap, model, f):
                 if(object[1] >=0.25):
                     object_name = model.names[object[0]]
                     polish_name = polish_object(object_name)
-                    side = detect_side(object[2], object[3], frame)
-                    send_packet(polish_name, side)
-                    time.sleep(1.5)
+                    if object_name == 'traffic light':  # Adjust this to the traffic light class name
+                        traffic_light_image = frame[int(y1):int(y2), int(x1):int(x2)]
+                        traffic_light_color = determine_traffic_light_color(traffic_light_image)
+                        side = detect_side(object[2], object[3], frame)
+                        send_packet_with_color(polish_name, side, traffic_light_color)
+                        time.sleep(1.5)
+                    else:
+                        side = detect_side(object[2], object[3], frame)
+                        send_packet(polish_name, side)
+                        time.sleep(1.5)
