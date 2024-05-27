@@ -11,13 +11,54 @@ Using wearable devices such as headphones and vibrating armbands, users receive 
 
 ## 🚀 Tech stack
 - Python
+- Kotlin
+- Wear OS 
 - OpenCV
+- Ultralytics
 - YOLO
 - Pyttsx3
 
 ## 🔮 Features
 - Real-time detection and identification of objects 
 - Integration with portable devices
+
+## ⚙️ Installation 
+#### Step 1: Download the source code
+Clone the repository and navigate to the root directory
+
+```bash
+git clone https://github.com/Bembnias/AmbientGuide.git
+cd AmbientGuide
+```
+
+#### Step 2: Create a virtual environment
+
+Create a virtual environment to isolate the project.
+
+```bash
+python3 -m venv agpoc
+source venv/bin/activate  # on Linux/MacOS
+venv\Scripts\activate  # on Windows
+```
+
+#### Step 3: Install dependencies
+
+Install the required dependencies using `pip`:
+
+```bash
+pip install ultralytics
+```
+
+#### Step 4: Run
+
+After installing all the dependencies, you can run the program using the following command:
+
+```bash
+python main.py
+```
+
+## 🤔 How it works
+[Here](https://youtu.be/SsbJsZ_3Yfs) you can see how it works.
 
 ## 👤 Authors 
 
